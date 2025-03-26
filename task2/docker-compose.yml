@@ -1,0 +1,35 @@
+version: '3'
+services:
+  user-service:
+    build: ./user_service
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./user_service:/app
+    environment:
+      - SECRET_KEY=your-secret-key
+      - ALGORITHM=HS256
+
+  trip-service:
+    build: ./trip_service
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./trip_service:/app
+    environment:
+      - SECRET_KEY=your-secret-key
+      - ALGORITHM=HS256
+    depends_on:
+      - user-service
+
+  route-service:
+    build: ./route_service
+    ports:
+      - "8003:8000"
+    volumes:
+      - ./route_service:/app
+    environment:
+      - SECRET_KEY=your-secret-key
+      - ALGORITHM=HS256
+    depends_on:
+      - user-service

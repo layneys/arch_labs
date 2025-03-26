@@ -1,0 +1,281 @@
+{
+	"info": {
+		"_postman_id": "0a6493c5-6ecc-4b9a-a113-45872703ff80",
+		"name": "task2_collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "40778940"
+	},
+	"item": [
+		{
+			"name": "Users_Requests",
+			"item": [
+				{
+					"name": "login_get_token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"pm.collectionVariables.set(\"token\", response.access_token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "username",
+								"value": "admin",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "password",
+								"value": "secret",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "secret",
+									"type": "text"
+								}
+							]
+						},
+						"url": "http://localhost:8001/token"
+					},
+					"response": []
+				},
+				{
+					"name": "create_user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"newuser\",\r\n  \"password\": \"password123\",\r\n  \"first_name\": \"John\",\r\n  \"last_name\": \"Doe\",\r\n  \"email\": \"john@example.com\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8001/users"
+					},
+					"response": []
+				},
+				{
+					"name": "get_users_list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:8001/users/"
+					},
+					"response": []
+				},
+				{
+					"name": "get_user_by_id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:8001/users/"
+					},
+					"response": []
+				},
+				{
+					"name": "get_user_by_username",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:8001/users/"
+					},
+					"response": []
+				},
+				{
+					"name": "delete_user_by_id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://127.0.0.1:8001/users/2"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Trips_Requests",
+			"item": [
+				{
+					"name": "create_trip",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"driver_id\": 1,\r\n    \"start_location\": \"Москва\",\r\n    \"end_location\": \"Санкт-Петербург\",\r\n    \"departure_time\": \"2024-03-27T10:00:00\",\r\n    \"available_seats\": 3,\r\n    \"price\": 1000.00,\r\n    \"description\": \"Поездка на микроавтобусе\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://127.0.0.1:8002/trips/"
+					},
+					"response": []
+				},
+				{
+					"name": "get_trips_list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:8002/"
+					},
+					"response": []
+				},
+				{
+					"name": "get_trip_by_id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:8002/"
+					},
+					"response": []
+				},
+				{
+					"name": "add_user_to_trip",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": "http://127.0.0.1:8002/"
+					},
+					"response": []
+				},
+				{
+					"name": "delete_trip_by_id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://127.0.0.1:8002/"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Routes_Requests",
+			"item": [
+				{
+					"name": "get_routes_list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://127.0.0.1:8003/routes/"
+					},
+					"response": []
+				},
+				{
+					"name": "create_route",
+					"request": {
+						"method": "POST",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get_route_by_id",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "get_routes_by_user_id",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "update_route_by_id",
+					"request": {
+						"method": "PUT",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "delete_route_by_id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{token}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "http://127.0.0.1:8003/routes/1"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		}
+	]
+}
