@@ -1,0 +1,322 @@
+openapi: 3.0.2
+info:
+  title: User Service
+  description: Сервис управления пользователями для платформы поиска попутчиков
+  version: 1.0.0
+paths:
+  /token:
+    post:
+      tags:
+        - auth
+      summary: Login For Access Token
+      operationId: login_for_access_token_token_post
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Body_login_for_access_token_token_post'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /users/:
+    get:
+      tags:
+        - users
+      summary: Read Users
+      operationId: read_users_users__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Read Users Users  Get
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - users
+      summary: Create User
+      operationId: create_user_users__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /users/{user_id}:
+    get:
+      tags:
+        - users
+      summary: Read User
+      operationId: read_user_users__user_id__get
+      parameters:
+        - required: true
+          schema:
+            title: User Id
+            type: integer
+          name: user_id
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+    delete:
+      tags:
+        - users
+      summary: Delete User
+      operationId: delete_user_users__user_id__delete
+      parameters:
+        - required: true
+          schema:
+            title: User Id
+            type: integer
+          name: user_id
+          in: path
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /users/by-username/{username}:
+    get:
+      tags:
+        - users
+      summary: Read User By Username
+      operationId: read_user_by_username_users_by_username__username__get
+      parameters:
+        - required: true
+          schema:
+            title: Username
+            type: string
+          name: username
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /users/by-name/{name_mask}:
+    get:
+      tags:
+        - users
+      summary: Read Users By Name
+      operationId: read_users_by_name_users_by_name__name_mask__get
+      parameters:
+        - required: true
+          schema:
+            title: Name Mask
+            type: string
+          name: name_mask
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Read Users By Name Users By Name  Name Mask  Get
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+components:
+  schemas:
+    Body_login_for_access_token_token_post:
+      title: Body_login_for_access_token_token_post
+      required:
+        - username
+        - password
+      type: object
+      properties:
+        grant_type:
+          title: Grant Type
+          pattern: password
+          type: string
+        username:
+          title: Username
+          type: string
+        password:
+          title: Password
+          type: string
+        scope:
+          title: Scope
+          type: string
+          default: ''
+        client_id:
+          title: Client Id
+          type: string
+        client_secret:
+          title: Client Secret
+          type: string
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    Token:
+      title: Token
+      required:
+        - access_token
+        - token_type
+      type: object
+      properties:
+        access_token:
+          title: Access Token
+          type: string
+        token_type:
+          title: Token Type
+          type: string
+    User:
+      title: User
+      required:
+        - username
+        - password
+        - first_name
+        - last_name
+        - email
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+        username:
+          title: Username
+          maxLength: 50
+          minLength: 3
+          type: string
+        password:
+          title: Password
+          type: string
+        first_name:
+          title: First Name
+          maxLength: 50
+          minLength: 1
+          type: string
+        last_name:
+          title: Last Name
+          maxLength: 50
+          minLength: 1
+          type: string
+        email:
+          title: Email
+          pattern: ^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$
+          type: string
+    UserResponse:
+      title: UserResponse
+      required:
+        - id
+        - username
+        - first_name
+        - last_name
+        - email
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+        username:
+          title: Username
+          type: string
+        first_name:
+          title: First Name
+          type: string
+        last_name:
+          title: Last Name
+          type: string
+        email:
+          title: Email
+          type: string
+    ValidationError:
+      title: ValidationError
+      required:
+        - loc
+        - msg
+        - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: token

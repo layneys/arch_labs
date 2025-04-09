@@ -1,0 +1,215 @@
+openapi: 3.0.2
+info:
+  title: Trip Service
+  description: Сервис управления поездками
+  version: 1.0.0
+paths:
+  /trips/:
+    get:
+      tags:
+        - trips
+      summary: Read Trips
+      operationId: read_trips_trips__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Read Trips Trips  Get
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trip'
+      security:
+        - OAuth2PasswordBearer: []
+    post:
+      tags:
+        - trips
+      summary: Create Trip
+      operationId: create_trip_trips__post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trip'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /trips/{trip_id}:
+    get:
+      tags:
+        - trips
+      summary: Read Trip
+      operationId: read_trip_trips__trip_id__get
+      parameters:
+        - required: true
+          schema:
+            title: Trip Id
+            type: integer
+          name: trip_id
+          in: path
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /trips/{trip_id}/join:
+    patch:
+      tags:
+        - trips
+      summary: Join Trip
+      operationId: join_trip_trips__trip_id__join_patch
+      parameters:
+        - required: true
+          schema:
+            title: Trip Id
+            type: integer
+          name: trip_id
+          in: path
+        - required: true
+          schema:
+            title: User Id
+            type: integer
+          name: user_id
+          in: query
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Trip'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+  /routes/{route_id}:
+    delete:
+      tags:
+        - routes
+      summary: Delete Route
+      operationId: delete_route_routes__route_id__delete
+      parameters:
+        - required: true
+          schema:
+            title: Route Id
+            type: integer
+          name: route_id
+          in: path
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+        - OAuth2PasswordBearer: []
+components:
+  schemas:
+    HTTPValidationError:
+      title: HTTPValidationError
+      type: object
+      properties:
+        detail:
+          title: Detail
+          type: array
+          items:
+            $ref: '#/components/schemas/ValidationError'
+    Trip:
+      title: Trip
+      required:
+        - route_id
+        - driver_id
+        - departure_time
+        - available_seats
+        - price
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+        route_id:
+          title: Route Id
+          type: integer
+        driver_id:
+          title: Driver Id
+          type: integer
+        user_ids:
+          title: User Ids
+          type: array
+          items:
+            type: integer
+          default: []
+        departure_time:
+          title: Departure Time
+          type: string
+          format: date-time
+        available_seats:
+          title: Available Seats
+          exclusiveMinimum: 0
+          type: integer
+        price:
+          title: Price
+          exclusiveMinimum: 0
+          type: number
+        description:
+          title: Description
+          type: string
+    ValidationError:
+      title: ValidationError
+      required:
+        - loc
+        - msg
+        - type
+      type: object
+      properties:
+        loc:
+          title: Location
+          type: array
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+        msg:
+          title: Message
+          type: string
+        type:
+          title: Error Type
+          type: string
+  securitySchemes:
+    OAuth2PasswordBearer:
+      type: oauth2
+      flows:
+        password:
+          scopes: {}
+          tokenUrl: http://user-service:8000/token
