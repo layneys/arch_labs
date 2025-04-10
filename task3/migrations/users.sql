@@ -10,7 +10,6 @@ create table users (
 );
 
 create index users_username_idx on "users" ("username");
-create index users_email_idx on "users" ("email");
 
 insert into users (id, username, password, first_name, last_name, email, created_at, updated_at) values (1, 'nantognazzi0', '$2a$04$.zvo.EB6JvsVyJdDV8N.muq/5c.nS2gIJoMw4y4LRo6yd7R8rGtgO', 'Nadean', 'Antognazzi', 'nantognazzi0@tripadvisor.com', '11/22/2024', '5/5/2024');
 insert into users (id, username, password, first_name, last_name, email, created_at, updated_at) values (2, 'tgarbett1', '$2a$04$09KCw2rCIr.AGwzJhp6NQ.wIjCM.UNB8xw9etuUWv5ebhYYZGSW7C', 'Thibaut', 'Garbett', 'tgarbett1@themeforest.net', '10/2/2024', '4/2/2025');
